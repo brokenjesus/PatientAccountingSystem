@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Patient History</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-4">
+    <h2>History for Patient: <span th:text="${patient.name}"></span></h2>
+
+    <!-- Table displaying admission/discharge history -->
+    <table class="table table-striped mt-4">
+        <thead>
+        <tr>
+            <th>Date</th>
+            <th>Reason</th>
+            <th>Diagnosis</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="history : ${admissionDischargeHistory}">
+            <td th:text="${history.date}"></td>
+            <td th:text="${history.reason}"></td>
+            <td th:text="${history.diagnosis}"></td>
+            <td>
+                <a th:href="@{/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-primary btn-sm">Edit</a>
+                <a th:href="@{/patient-history/{patientId}/delete/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('Are you sure you want to delete this entry?');">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <!-- Button to open modal for adding new history entry -->
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addHistoryModal">Add Entry</button>
+
+    <!-- Modal for adding new history entry -->
+    <div class="modal fade" id="addHistoryModal" tabindex="-1" aria-labelledby="addHistoryModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form th:action="@{/patient-history/{id}/add_history(id=${patient.id})}" method="post">
+                <div class="modal-header">
+                        <h5 class="modal-title" id="addHistoryModalLabel">Add Admission/Discharge Entry</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" name="patientId" th:value="${patient.id}"/>
+
+                        <div class="mb-3">
+                            <label for="date" class="form-label">Date</label>
+                            <input type="date" class="form-control" id="date" name="date" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason</label>
+                            <select class="form-control" id="reason" name="reason" required>
+                                <option value="ADMISSION">Admission</option>
+                                <option value="DISCHARGE">Discharge</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="diagnosis" class="form-label">Diagnosis</label>
+                            <input type="text" class="form-control" id="diagnosis" name="diagnosis" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary">Save Entry</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
