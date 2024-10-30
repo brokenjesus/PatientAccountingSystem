@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.experimental.SuperBuilder;
 import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.annotations.DialectOverride;
 
 @Data
 @Entity
@@ -16,6 +15,8 @@ import org.hibernate.annotations.DialectOverride;
 @NoArgsConstructor
 @Table(name = "ward", uniqueConstraints = {
         @UniqueConstraint(columnNames = "number")
+}, indexes = {
+        @Index(name = "idx_ward_number", columnList = "number")
 })
 public class Ward {
 

@@ -3,18 +3,21 @@ package by.lupach.patient_accounting_system.controllers;
 import by.lupach.patient_accounting_system.entities.Ward;
 import by.lupach.patient_accounting_system.services.WardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/wards")
 public class WardController {
 
     @Autowired
     private WardService wardService;
+    private static final int PAGE_SIZE = 20;
 
     // Метод для создания новой палаты
     @GetMapping("/create-ward")
@@ -29,13 +32,22 @@ public class WardController {
         return "redirect:/wards";
     }
 
-    // Метод для отображения списка палат
-    @GetMapping("/wards")
-    public String listWards(Model model) {
-        List<Ward> wards = wardService.getAll().get();
-        model.addAttribute("wards", wards);
+    @GetMapping()
+    public String listWards(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Ward> wardsPage = wardService.getAll(page, PAGE_SIZE).get();
+        model.addAttribute("wardsPage", wardsPage);
         return "wards";
     }
+
+    @GetMapping("/search")
+    public String searchByNumber(@RequestParam("number") String number, Model model,
+                                 @RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Ward> wardsPage = wardService.getByNumber(number, PageRequest.of(page, PAGE_SIZE)).get();
+        model.addAttribute("wardsPage", wardsPage);
+        model.addAttribute("searchNumber", number); // сохраняем значение поиска
+        return "wards";
+    }
+
 
     // Метод для редактирования палаты
     @GetMapping("/edit-ward/{id}")

@@ -12,13 +12,19 @@
 <div class="container">
     <h1 class="my-4">Wards List</h1>
 
-    <!-- Button to open the modal -->
-    <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#wardModal">
-        Add New Ward
-    </button>
+    <!-- Container for search and add ward button -->
+    <div class="d-flex justify-content-between mb-3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#wardModal">
+            Add New Ward
+        </button>
+        <form th:action="@{/wards/search}" method="get" class="input-group me-3" style="width: 250px;">
+            <input type="text" class="form-control" placeholder="Search by Ward Number" name="number"
+                   th:value="${searchNumber}">
+            <button class="btn btn-primary" type="submit">Search</button>
+        </form>
+    </div>
 
     <hr>
-
 
     <!-- Modal for creating a new ward -->
     <div class="modal fade" id="wardModal" tabindex="-1" aria-labelledby="wardModalLabel" aria-hidden="true">
@@ -29,20 +35,20 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form th:action="@{/create-ward}" method="post">
+                    <form th:action="@{/wards/create-ward}" method="post">
                         <div class="mb-3">
                             <label for="phone" class="form-label">Phone</label>
-                            <input type="tel" th:name="phone" class="form-control" id="phone" required>
+                            <input type="tel" name="phone" class="form-control" id="phone" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="bedPlaceCount" class="form-label">Bed Places Count</label>
-                            <input type="number" th:name="bedPlaceCount" class="form-control" id="bedPlaceCount" required>
+                            <input type="number" name="bedPlaceCount" class="form-control" id="bedPlaceCount" required>
                         </div>
 
                         <div class="mb-3">
                             <label for="number" class="form-label">Ward Number</label>
-                            <input type="text" th:name="number" class="form-control" id="number" required>
+                            <input type="text" name="number" class="form-control" id="number" required>
                         </div>
 
                         <button type="submit" class="btn btn-primary">Create Ward</button>
@@ -52,6 +58,7 @@
         </div>
     </div>
 
+    <!-- Table to display wards -->
     <table class="table table-striped">
         <thead>
         <tr>
@@ -63,19 +70,36 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="ward : ${wards}">
+        <tr th:each="ward : ${wardsPage.content}">
             <td th:text="${ward.id}"></td>
             <td th:text="${ward.phone}"></td>
             <td th:text="${ward.bedPlaceCount}"></td>
             <td th:text="${ward.number}"></td>
             <td>
-                <a th:href="@{/edit-ward/{id}(id=${ward.id})}" class="btn btn-primary btn-sm">Edit</a>
-                <a th:href="@{/delete-ward/{id}(id=${ward.id})}" class="btn btn-danger btn-sm"
+                <a th:href="@{/wards/edit-ward/{id}(id=${ward.id})}" class="btn btn-primary btn-sm">Edit</a>
+                <a th:href="@{/wards/delete-ward/{id}(id=${ward.id})}" class="btn btn-danger btn-sm"
                    onclick="return confirm('Are you sure you want to delete this ward?');">Delete</a>
             </td>
         </tr>
         </tbody>
     </table>
+
+    <!-- Pagination controls -->
+    <nav>
+        <ul class="pagination justify-content-center">
+            <li th:classappend="${wardsPage.hasPrevious()} ? 'page-item' : 'page-item disabled'">
+                <a th:href="@{/wards(page=${wardsPage.number - 1})}" class="page-link">Previous</a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, wardsPage.totalPages - 1)}"
+                th:classappend="${i == wardsPage.number} ? 'page-item active' : 'page-item'">
+                <a th:href="@{/wards(page=${i})}" class="page-link" th:text="${i + 1}"></a>
+            </li>
+            <li th:classappend="${wardsPage.hasNext()} ? 'page-item' : 'page-item disabled'">
+                <a th:href="@{/wards(page=${wardsPage.number + 1})}" class="page-link">Next</a>
+            </li>
+        </ul>
+    </nav>
 </div>
+
 </body>
 </html>

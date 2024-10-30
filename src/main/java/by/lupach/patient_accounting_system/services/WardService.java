@@ -1,13 +1,13 @@
 package by.lupach.patient_accounting_system.services;
 
-import by.lupach.patient_accounting_system.entities.Patient;
 import by.lupach.patient_accounting_system.entities.Ward;
-import by.lupach.patient_accounting_system.repositories.PatientRepository;
 import by.lupach.patient_accounting_system.repositories.WardRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,11 +32,20 @@ public class WardService {
             return wardRepository.findById(id);
         }
 
-        // Delete a patient by ID
+        public Optional<Page<Ward>> getByNumber(String number, PageRequest pageRequest) {
+            return Optional.ofNullable(wardRepository.findByNumberContainingIgnoreCase(number, pageRequest));
+        }
+
+
+    // Delete a patient by ID
         public void deleteById(Integer id) {
             wardRepository.deleteById(id);
         }
 
+        public Optional<Page<Ward>> getAll(int page, int size) {
+            Pageable pageable = PageRequest.of(page, size);
+            return Optional.ofNullable(wardRepository.findAll(pageable));
+        }
         public Optional<List<Ward>> getAvailableWards() {
             return Optional.ofNullable(wardRepository.findAvailableWards());
         }
