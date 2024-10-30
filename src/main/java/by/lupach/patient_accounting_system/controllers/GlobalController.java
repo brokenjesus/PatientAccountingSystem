@@ -14,13 +14,17 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 public class GlobalController {
 
     @Autowired
-    private UserService userService; // Сервис для работы с вашим классом User
+    private UserService userService;
 
     @ModelAttribute
-    public void addUserToModel(Model model, @Autowired User user) {
+    public void addUserToModel(Model model) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
-            model.addAttribute("user", user);
+        if (authentication != null && authentication.isAuthenticated() && authentication.getPrincipal() instanceof User) {
+            User user = (User) authentication.getPrincipal();
+            model.addAttribute("user", user); // Add user to the model
+        } else {
+            System.out.println("====");
+            model.addAttribute("user", null); // Ensure user is explicitly set to null
         }
     }
 }

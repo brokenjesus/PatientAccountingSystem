@@ -12,8 +12,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/patient-history")
-public class AdmissionDischargeHistoryController {
+@RequestMapping("/patients/patient-history")
+public class PatientHistoryController {
 
     @Autowired
     private PatientService patientService;
@@ -35,7 +35,7 @@ public class AdmissionDischargeHistoryController {
     public String save(@PathVariable("id") int patientId, AdmissionDischargeHistory admissionDischargeHistory) {
         admissionDischargeHistory.setPatient(patientService.getById(patientId).get());
         admissionDischargeHistoryService.save(admissionDischargeHistory);
-        return "redirect:/patient-history/"+patientId;
+        return "redirect:/patients/patient-history/"+patientId;
     }
 
     @GetMapping("/{patientId}/edit/{historyId}")
@@ -55,12 +55,12 @@ public class AdmissionDischargeHistoryController {
         admissionDischargeHistory.setId(historyId);
         admissionDischargeHistory.setPatient(patientService.getById(patientId).get());
         admissionDischargeHistoryService.save(admissionDischargeHistory);
-        return "redirect:/patient-history/" + patientId;
+        return "redirect:/patients/patient-history/" + patientId;
     }
 
     @GetMapping("/{patientId}/delete/{historyId}")
     public String delete(@PathVariable("patientId") int patientId, @PathVariable("historyId") int historyId) {
         admissionDischargeHistoryService.deleteById(historyId);
-        return "redirect:/patient-history/"+patientId;
+        return "redirect:/patients/patient-history/"+patientId;
     }
 }

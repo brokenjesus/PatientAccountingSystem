@@ -8,7 +8,7 @@
 <div class="container">
     <h1 class="my-4">Edit Ward</h1>
 
-    <form action="#" th:action="@{/edit-ward/{id}(id=${ward.id})}" th:object="${ward}" method="post">
+    <form action="#" th:action="@{/wards/edit-ward/{id}(id=${ward.id})}" th:object="${ward}" method="post">
         <div class="mb-3">
             <label for="phone" class="form-label">Phone</label>
             <input type="text" th:field="*{phone}" class="form-control" id="phone" required>

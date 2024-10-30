@@ -24,8 +24,8 @@
             <td th:text="${history.reason}"></td>
             <td th:text="${history.diagnosis}"></td>
             <td>
-                <a th:href="@{/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-primary btn-sm">Edit</a>
-                <a th:href="@{/patient-history/{patientId}/delete/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-danger btn-sm"
+                <a th:href="@{/patients/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-primary btn-sm">Edit</a>
+                <a th:href="@{/patients/patient-history/{patientId}/delete/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-danger btn-sm"
                    onclick="return confirm('Are you sure you want to delete this entry?');">Delete</a>
             </td>
         </tr>
@@ -39,7 +39,7 @@
     <div class="modal fade" id="addHistoryModal" tabindex="-1" aria-labelledby="addHistoryModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form th:action="@{/patient-history/{id}/add_history(id=${patient.id})}" method="post">
+                <form th:action="@{/patients/patient-history/{id}/add_history(id=${patient.id})}" method="post">
                 <div class="modal-header">
                         <h5 class="modal-title" id="addHistoryModalLabel">Add Admission/Discharge Entry</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>

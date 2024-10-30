@@ -8,7 +8,7 @@
 <div class="container mt-4">
     <h2>Edit Admission/Discharge Entry for Patient: <span th:text="${patient.name}"></span></h2>
 
-    <form th:action="@{/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" method="post">
+    <form th:action="@{/patients/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" method="post">
         <input type="hidden" name="patientId" th:value="${patient.id}"/>
         <input type="hidden" name="historyId" th:value="${history.id}"/>
 
@@ -29,7 +29,7 @@
         </div>
 
         <div class="mb-3">
-            <a th:href="@{/patient-history/{patientId}(patientId=${patient.id})}" class="btn btn-secondary">Cancel</a>
+            <a th:href="@{/patients/patient-history/{patientId}(patientId=${patient.id})}" class="btn btn-secondary">Cancel</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>
         </div>
     </form>

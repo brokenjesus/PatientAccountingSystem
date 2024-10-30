@@ -1,18 +1,21 @@
 package by.lupach.patient_accounting_system.controllers;
 
+import by.lupach.patient_accounting_system.entities.Patient;
 import by.lupach.patient_accounting_system.entities.Transfer;
 import by.lupach.patient_accounting_system.services.PatientService;
 import by.lupach.patient_accounting_system.services.TransferService;
 import by.lupach.patient_accounting_system.services.WardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @Controller
+@RequestMapping("/transfers")
 public class TransferController {
     @Autowired
     private TransferService transferService;
@@ -23,9 +26,28 @@ public class TransferController {
     @Autowired
     private WardService wardService;
 
+    private final static int PAGE_SIZE = 20;
 
-    @GetMapping("transfers")
-    public String transfers() {
+
+    @GetMapping()
+    public String listTransfers(@RequestParam(defaultValue = "0") int page, Model model) {
+        Page<Transfer> transferPage = transferService.getAll(page, PAGE_SIZE).get();
+        model.addAttribute("transferPage", transferPage);
+        return "transfers";
+    }
+
+    @GetMapping("/search")
+    public String searchTransfers(
+            Model model,
+            @RequestParam(value = "page", defaultValue = "0") int page,
+            @RequestParam(value = "wardNumber", required = false) String wardNumber,
+            @RequestParam(value = "patientName", required = false) String patientName) {
+
+        Page<Transfer> transferPage = transferService.searchByWardNumberOrPatientName(wardNumber, patientName, PageRequest.of(page, PAGE_SIZE)).get();
+
+        model.addAttribute("transferPage", transferPage);
+        model.addAttribute("wardNumber", wardNumber);
+        model.addAttribute("patientName", patientName);
         return "transfers";
     }
 
@@ -44,26 +66,31 @@ public class TransferController {
         model.addAttribute("wards", wardService.getAvailableWards().get());
     }
 
-    @PostMapping("/transfers/create-transfer")
+    @PostMapping("/create-transfer")
     public String createTransfer(Transfer transfer){
         transferService.save(transfer);
         return "redirect:/transfers";
     }
 
-    @GetMapping("/transfers/delete-transfer/{id}")
-    public String createTransfer(@PathVariable("id") Integer id, Transfer transfer){
+    @GetMapping("/delete-transfer/{id}")
+    public String createTransfer(@PathVariable("id") Integer id){
         transferService.deleteById(id);
         return "redirect:/transfers";
     }
 
-    @GetMapping("/transfers/edit-transfer/{id}")
+    @GetMapping("/edit-transfer/{id}")
     public String editTransfer(@PathVariable("id") Integer id, Model model) {
-        model.addAttribute("transfer",  transferService.findById(id).get());
-        model.addAttribute("wards", wardService.getAvailableWards().get());
-        return "edit_transfer";
+        Optional<Transfer> transfer = transferService.findById(id);
+        if (transfer.isPresent()) {
+            model.addAttribute("transfer",  transfer.get());
+            model.addAttribute("wards", wardService.getAvailableWards().get());
+            return "edit_transfer";
+        } else {
+            return "redirect:/transfers"; // если пациент не найден, редирект на список
+        }
     }
 
-    @PostMapping("/transfers/edit-transfer/{id}")
+    @PostMapping("/edit-transfer/{id}")
     public String updateTransfer(@PathVariable("id") Integer id, @ModelAttribute Transfer transfer) {
         transfer.setId(id); // Ensure the ID is set for the update
         transfer.setPatient(patientService.getById(transfer.getPatient().getId()).get());
