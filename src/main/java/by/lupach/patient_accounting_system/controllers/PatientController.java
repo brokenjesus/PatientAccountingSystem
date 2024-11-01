@@ -73,33 +73,26 @@ public class PatientController {
     }
 
 //    //CUSTOM QUERIES HANDLER
-//    @GetMapping("/patients/custom-query/get-ward/{name}")
-//    public String getPatientWardAndPhoneByName(@PathVariable String name, Model model) {
-//        System.out.println("=======");
-//        List<PatientCustomSearchQueries> patientCustomSearchQueryResult = patientCustomSearchQueriesService.getPatientWardAndPhoneByName(name).orElse(new ArrayList<>());
-//        if (!patientCustomSearchQueryResult.isEmpty()) {
-//            System.out.println(patientCustomSearchQueryResult.get(0).getPatientName());
-//        }
-//        model.addAttribute("patientsPage", patientCustomSearchQueryResult);
-//        return "patients";
-//    }
-//
-//    @GetMapping("custom-query/get-patients-on-date/{date}")
-//    public String getPatientsByDate(@RequestParam Date date, Model model) {
-//        System.out.println("=======");
-//        PatientCustomSearchQueries patientCustomSearchQueries = new PatientCustomSearchQueries();
-//        patientCustomSearchQueries.setPatientName("Nikita");
-//        List<PatientCustomSearchQueries> patientCustomSearchQueryResult =  patientCustomSearchQueriesService.getPatientsByDate(date).get();
-//        patientCustomSearchQueryResult.add(patientCustomSearchQueries);
-//        model.addAttribute("patientsPage", patientCustomSearchQueryResult);
-//        return "patients";
-//    }
-//
-//    @GetMapping("/patients/custom-query/female-by-age/{age}")
-//    public String getFemalePatientsByAge(@PathVariable int age, Model model) {
-//        System.out.println("=======");
-//        List<PatientCustomSearchQueries> patientCustomSearchQueryResult = patientCustomSearchQueriesService.getFemalePatientsByAge(age).orElse(new ArrayList<>());
-//        model.addAttribute("patientsPage", patientCustomSearchQueryResult);
-//        return "patients";
-//    }
+    @GetMapping("/custom-query/get-patient-ward")
+    public String getPatientWardAndPhoneByName(@RequestParam String name, Model model) {
+        List<PatientCustomSearchQueries> result = patientCustomSearchQueriesService.getPatientWardAndPhoneByName(name).orElse(new ArrayList<>());
+        model.addAttribute("customQueryResult", result);
+        return "patient_custom_search_result";
+    }
+
+    // Custom query for patients on a specific date
+    @GetMapping("/custom-query/get-patients-by-date")
+    public String getPatientsByDate(@RequestParam Date date, Model model) {
+        List<PatientCustomSearchQueries> result = patientCustomSearchQueriesService.getPatientsByDate(date).orElse(new ArrayList<>());
+        model.addAttribute("customQueryResult", result);
+        return "patient_custom_search_result";
+    }
+
+    // Custom query for female patients by age
+    @GetMapping("/custom-query/get-female-by-age")
+    public String getFemalePatientsByAge(@RequestParam int age, Model model) {
+        List<PatientCustomSearchQueries> result = patientCustomSearchQueriesService.getFemalePatientsByAge(age).orElse(new ArrayList<>());
+        model.addAttribute("customQueryResult", result);
+        return "patient_custom_search_result";
+    }
 }

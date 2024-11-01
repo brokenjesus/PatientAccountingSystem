@@ -58,7 +58,7 @@ public class TransferController {
 
     @ModelAttribute
     public void addPatientToModel(Model model){
-        model.addAttribute("patients", patientService.getAvailableToTransferPatients().get());
+        model.addAttribute("patients", patientService.getAll().get());
     }
 
     @ModelAttribute

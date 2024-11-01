@@ -15,27 +15,24 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public String accessKey() {
-//        return "123";
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
-                        .requestMatchers("/signup").permitAll()
-                        .requestMatchers("/login").permitAll()  // доступ для всех к этим страницам
-                        .anyRequest().authenticated()  // все остальные запросы требуют аутентификации
+                        .requestMatchers("/login").permitAll()
+                        .requestMatchers("/admin/manage-users/edit").authenticated()
+                        .requestMatchers("/admin/signup").hasRole("ADMIN")// доступ к регистрации только для админа
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login")  // путь к кастомной странице входа
-                        .loginProcessingUrl("/login_processing")  // URL, по которому отправляются данные формы
-                        .defaultSuccessUrl("/", true)  // куда перенаправлять при успешном входе
-                        .failureUrl("/login?error=true")  // куда перенаправлять при неудачном входе
-                        .usernameParameter("username")  // параметр для имени пользователя
-                        .passwordParameter("password")  // параметр для пароля
-                        .permitAll()  // доступ к странице логина для всех
+                        .loginPage("/login")
+                        .loginProcessingUrl("/login-processing")
+                        .defaultSuccessUrl("/", true)
+                        .failureUrl("/login?error=true")
+                        .usernameParameter("username")
+                        .passwordParameter("password")
+                        .permitAll()
                 )
                 .logout(logout -> logout
                         .logoutUrl("/logout")

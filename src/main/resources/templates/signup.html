@@ -24,7 +24,7 @@
         <input type="submit" value="Register"/>
     </form> -->
 
-    <form class="row g-3 needs-validation" form id="signup" method="POST" th:action="@{/signup}">
+    <form class="row g-3 needs-validation" form id="signup" method="POST" th:action="@{/admin/signup}">
         <div class="col-md-4">
             <label class="form-label" for="validationCustom01">Full name: </label>
             <input class="form-control" id="validationCustom01" name="name" required type="text"
@@ -59,7 +59,7 @@
 
         <div class="col-md-3">
             <label class="form-label" for="validationCustom05">Phone</label>
-            <input class="form-control" id="validationCustom05" name="phone" required type="text">
+            <input class="form-control" id="validationCustom05" name="phone" required type="tel">
             <div class="invalid-feedback">
                 Phone number is invalid.
             </div>

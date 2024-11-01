@@ -37,4 +37,8 @@ public class Ward {
     @Column(nullable = false)
     @ColumnDefault("1")
     private Integer bedPlaceCount;
+
+    @Column(name = "occupied_beds", nullable = false)
+    @ColumnDefault("0")
+    private int occupiedBeds;
 }

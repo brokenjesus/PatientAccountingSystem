@@ -1,6 +1,5 @@
 package by.lupach.patient_accounting_system.services;
 
-import by.lupach.patient_accounting_system.entities.Patient;
 import by.lupach.patient_accounting_system.entities.Transfer;
 import by.lupach.patient_accounting_system.repositories.TransferRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +8,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,11 +31,16 @@ public class TransferService {
     }
 
     public Optional<Page<Transfer>> searchByWardNumberOrPatientName(String wardNumber, String patientName, Pageable pageable) {
-        return Optional.ofNullable(transferRepository.findByWardNumberAndPatientName(wardNumber, patientName, pageable));
+        return Optional.ofNullable(transferRepository.findByOptionalWardNumberContainingAndOptionalPatientNameContaining(wardNumber, patientName, pageable));
     }
 
     public Transfer save(Transfer transfer){
         return transferRepository.save(transfer);
+    }
+
+
+    public Optional<Transfer> findByDate(Date date) {
+        return Optional.ofNullable(transferRepository.findByDate(date));
     }
 
     public void deleteById(Integer id){

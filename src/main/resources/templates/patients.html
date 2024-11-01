@@ -14,6 +14,9 @@
         <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addPatientModal">
             Add New Patient
         </button>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#selectProcedureModal">
+            Select Procedure
+        </button>
         <form th:action="@{/patients/search}" method="get" class="input-group me-3" style="width: 450px;">
             <input type="text" class="form-control" placeholder="Search by name" name="name">
             <button class="btn btn-primary" type="submit">Search</button>
@@ -45,7 +48,6 @@
             <td th:text="${patient.height}"></td>
             <td th:text="${patient.hairColor}"></td>
             <td>
-                <!-- Action buttons -->
                 <a th:href="@{/patients/edit-patient/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">Edit</a>
                 <a th:href="@{/patients/patient-history/{id}(id=${patient.id})}" class="btn btn-primary btn-sm">History</a>
                 <a th:href="@{/patients/delete-patient/{id}(id=${patient.id})}" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this patient?');">Delete</a>
@@ -53,22 +55,6 @@
         </tr>
         </tbody>
     </table>
-
-    <!-- Pagination controls -->
-    <nav>
-        <ul class="pagination justify-content-center">
-            <li th:classappend="${patientsPage.hasPrevious()} ? 'page-item' : 'page-item disabled'">
-                <a th:href="@{/patients(page=${patientsPage.number - 1})}" class="page-link">Previous</a>
-            </li>
-            <li th:each="i : ${#numbers.sequence(0, patientsPage.totalPages - 1)}"
-                th:classappend="${i == patientsPage.number} ? 'page-item active' : 'page-item'">
-                <a th:href="@{/patients(page=${i})}" class="page-link" th:text="${i + 1}"></a>
-            </li>
-            <li th:classappend="${patientsPage.hasNext()} ? 'page-item' : 'page-item disabled'">
-                <a th:href="@{/patients(page=${patientsPage.number + 1})}" class="page-link">Next</a>
-            </li>
-        </ul>
-    </nav>
 
     <!-- Modal for adding a new patient -->
     <div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
@@ -80,7 +66,7 @@
                 </div>
                 <div class="modal-body">
                     <form th:action="@{/patients/create-patient}" method="post">
-                    <div class="mb-3">
+                        <div class="mb-3">
                             <label for="patientName" class="form-label">Name</label>
                             <input type="text" class="form-control" id="patientName" name="name" required>
                         </div>
@@ -105,7 +91,7 @@
                             <input type="text" class="form-control" id="patientHairColor" name="hairColor" required>
                         </div>
                         <div class="mb-3">
-                            <label for="distinctiveCharacteristics" class="form-label">distinctiveCharacteristics</label>
+                            <label for="distinctiveCharacteristics" class="form-label">Distinctive Characteristics</label>
                             <input type="text" class="form-control" id="distinctiveCharacteristics" name="distinctiveCharacteristics">
                         </div>
                         <div class="modal-footer">
@@ -117,8 +103,88 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal for selecting a procedure -->
+    <div class="modal fade" id="selectProcedureModal" tabindex="-1" aria-labelledby="selectProcedureModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="selectProcedureModalLabel">Select Custom Query Procedure</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="procedureForm" onsubmit="return false;">
+                        <select class="form-select mb-3" id="procedureSelect" onchange="showProcedureFields()" required>
+                            <option value="" selected disabled>Select Procedure</option>
+                            <option value="getPatientWardAndPhoneByName">Get Patient Ward and Phone by Name</option>
+                            <option value="getPatientsByDate">Get Patients by Date</option>
+                            <option value="getFemalePatientsByAge">Get Female Patients by Age</option>
+                        </select>
+                        <div id="queryFields"></div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="submitProcedure()">Search</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function showProcedureFields() {
+        const procedureSelect = document.getElementById('procedureSelect');
+        const queryFields = document.getElementById('queryFields');
+        queryFields.innerHTML = ''; // Clear previous fields
+
+        if (procedureSelect.value === 'getPatientWardAndPhoneByName') {
+            queryFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="patientNameInput" class="form-label">Enter Patient Name</label>
+                    <input type="text" class="form-control" id="patientNameInput" name="patientName" required>
+                </div>
+            `;
+        } else if (procedureSelect.value === 'getPatientsByDate') {
+            queryFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="queryDate" class="form-label">Enter Date</label>
+                    <input type="date" class="form-control" id="queryDate" name="queryDate" required>
+                </div>
+            `;
+        } else if (procedureSelect.value === 'getFemalePatientsByAge') {
+            queryFields.innerHTML = `
+                <div class="mb-3">
+                    <label for="age" class="form-label">Enter Age</label>
+                    <input type="number" class="form-control" id="age" name="age" required>
+                </div>
+            `;
+        }
+    }
+
+    function submitProcedure() {
+        const procedureSelect = document.getElementById('procedureSelect');
+        const patientName = document.getElementById('patientNameInput'); // Change this to match the updated ID
+        const queryDate = document.getElementById('queryDate');
+        const age = document.getElementById('age');
+
+        let url = '';
+
+        if (procedureSelect.value === 'getPatientWardAndPhoneByName') {
+            // Ensure we use the correct field ID to get the value
+            url = `patients/custom-query/get-patient-ward?name=${patientName.value}`;
+        } else if (procedureSelect.value === 'getPatientsByDate') {
+            url = `patients/custom-query/get-patients-by-date?date=${queryDate.value}`;
+        } else if (procedureSelect.value === 'getFemalePatientsByAge') {
+            url = `patients/custom-query/get-female-by-age?age=${age.value}`;
+        }
+
+        window.location.href = url; // Redirect to the appropriate URL
+    }
+
+</script>
+
+
 </body>
 </html>

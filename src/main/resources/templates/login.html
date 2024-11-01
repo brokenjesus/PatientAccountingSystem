@@ -12,8 +12,6 @@
     <div th:if="${error}">
         Unable to login. Check your username and password.
     </div>
-    <p>New here? Click
-        <a th:href="@{/signup}">here</a> to register.</p>
     <!-- <form method="POST" th:action="@{/login_processing}" id="loginForm">
         <label for="username">Username: </label>
         <input type="text" name="username" id="username" /><br/>
@@ -23,7 +21,7 @@
 
     </form> -->
 
-    <form class="row g-3 needs-validation" id="loginForm" method="POST" th:action="@{/login_processing}">
+    <form class="row g-3 needs-validation" id="loginForm" method="POST" th:action="@{/login-processing}">
         <div>
             <div class="col-md-4">
                 <label class="form-label" for="validationCustomUsername">Username: </label>

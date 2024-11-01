@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 @Data
 @Entity
@@ -44,8 +45,13 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority(role.toString()));
+        return List.of(new SimpleGrantedAuthority(role.toString()));
     }
+
+    public boolean isAdmin() {
+        return this.role == Role.ROLE_ADMIN;
+    }
+
 
     @Override
     public boolean isAccountNonExpired() {
@@ -67,7 +73,7 @@ public class User implements UserDetails {
         return true;
     }
 
-    enum Role {
+    public enum Role {
         ROLE_MEDIC, ROLE_ADMIN
     }
 }

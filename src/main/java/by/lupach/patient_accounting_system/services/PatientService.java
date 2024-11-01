@@ -43,9 +43,9 @@ public class PatientService {
     }
 
 
-    public Optional<List<Patient>> getAvailableToTransferPatients() {
-        return Optional.ofNullable(patientRepository.findAvailableToTransferPatients());
-    }
+//    public Optional<List<Patient>> getAvailableToTransferPatients() {
+//        return Optional.ofNullable(patientRepository.findAvailableToTransferPatients());
+//    }
 
     // Delete a patient by ID
     public void deleteById(Integer id) {
