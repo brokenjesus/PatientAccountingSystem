@@ -43,7 +43,7 @@ public class PatientCustomSearchQueriesService {
             String phone = (String) row[2];
             String wardNumber = (String) row[3];
 
-            patientList.add(new PatientCustomSearchQueries(patientName, age, wardNumber, phone, null)); // admissionDate = null
+            patientList.add(new PatientCustomSearchQueries(patientName, age, wardNumber, phone, null, null)); // admissionDate = null
         }
         return Optional.of(patientList);
     }
@@ -58,9 +58,10 @@ public class PatientCustomSearchQueriesService {
         for (Object[] row : results) {
             String patientName = (String) row[0];
             Integer age = (Integer) row[1];
-            Date admissionDate = (Date) row[2];
+            Date transferDate = (Date) row[2];
+            String wardNumber = (String) row[3];
 
-            patientList.add(new PatientCustomSearchQueries(patientName, age, null, null, admissionDate)); // phone = null
+            patientList.add(new PatientCustomSearchQueries(patientName, age, wardNumber, null,null, transferDate)); // phone = null
         }
         return Optional.of(patientList);
     }
@@ -77,7 +78,7 @@ public class PatientCustomSearchQueriesService {
             Integer age = (Integer) row[1];
             Date admissionDate = (Date) row[2];
 
-            patientList.add(new PatientCustomSearchQueries(patientName, age, null, null, admissionDate)); // wardNumber и phone = null
+            patientList.add(new PatientCustomSearchQueries(patientName, age, null, null, admissionDate, null)); // wardNumber и phone = null
         }
         return Optional.of(patientList);
     }

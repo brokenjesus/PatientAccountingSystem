@@ -11,7 +11,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/patients/patient-history")
@@ -87,7 +86,7 @@ public class PatientHistoryController {
             model.addAttribute("wards", wardService.getAvailableWards().get());
         }
 
-        return "patient_history_edit"; // Return the edit view
+        return "edit_patient_history"; // Return the edit view
     }
 
     // Method to update the edited history entry
@@ -103,6 +102,7 @@ public class PatientHistoryController {
         existingHistory.setDate(history.getDate());
         existingHistory.setReason(history.getReason());
         existingHistory.setDiagnosis(history.getDiagnosis());
+        existingHistory.setAdmissionMethod(history.getAdmissionMethod());
 
         admissionDischargeHistoryService.save(existingHistory); // Save updated history
 

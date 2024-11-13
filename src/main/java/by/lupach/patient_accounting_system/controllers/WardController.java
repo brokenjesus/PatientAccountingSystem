@@ -64,6 +64,7 @@ public class WardController {
     @PostMapping("/edit-ward/{id}")
     public String updateWard(@PathVariable("id") Integer id, @ModelAttribute Ward ward) {
         ward.setId(id); // Устанавливаем ID для существующей палаты
+        ward.setOccupiedBeds(wardService.getById(id).get().getOccupiedBeds());
         wardService.save(ward); // Сохраняем обновленную палату
         return "redirect:/wards";
     }

@@ -27,9 +27,11 @@
         </div>
 
         <div class="mb-3">
-            <label for="ward" class="form-label">Select Ward</label>
+            <label for="ward" class="form-label">Ward:</label>
             <select th:field="*{ward.id}" class="form-control" id="ward" required>
-                <option th:each="ward : ${wards}" th:value="${ward.id}" th:text="${ward.number}" th:selected="${transfer.ward.id == ward.id}"></option>
+                <option th:each="ward : ${wards}" th:value="${ward.id}"
+                        th:text="${ward.number}" th:selected="${ward.id == transfer.ward.id}">
+                </option>
             </select>
         </div>
 

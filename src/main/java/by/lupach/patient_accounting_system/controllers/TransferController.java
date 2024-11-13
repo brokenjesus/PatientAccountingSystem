@@ -1,7 +1,7 @@
 package by.lupach.patient_accounting_system.controllers;
 
-import by.lupach.patient_accounting_system.entities.Patient;
 import by.lupach.patient_accounting_system.entities.Transfer;
+import by.lupach.patient_accounting_system.entities.Ward;
 import by.lupach.patient_accounting_system.services.PatientService;
 import by.lupach.patient_accounting_system.services.TransferService;
 import by.lupach.patient_accounting_system.services.WardService;
@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -80,15 +81,26 @@ public class TransferController {
 
     @GetMapping("/edit-transfer/{id}")
     public String editTransfer(@PathVariable("id") Integer id, Model model) {
-        Optional<Transfer> transfer = transferService.findById(id);
-        if (transfer.isPresent()) {
-            model.addAttribute("transfer",  transfer.get());
-            model.addAttribute("wards", wardService.getAvailableWards().get());
+        Optional<Transfer> transferOptional = transferService.findById(id);
+        List<Ward> wards = wardService.getAvailableWards().get();
+
+        if (transferOptional.isPresent()) {
+            Transfer transfer = transferOptional.get();
+            Integer currentWardId = transfer.getWard().getId();
+            Ward currentWard = wardService.getById(currentWardId).orElse(null);
+
+            if (currentWard != null && !wards.contains(currentWard)) {
+                wards.add(currentWard);
+            }
+
+            model.addAttribute("transfer", transfer); // Adding the Transfer object, not Optional
+            model.addAttribute("wards", wards);
             return "edit_transfer";
         } else {
-            return "redirect:/transfers"; // если пациент не найден, редирект на список
+            return "redirect:/transfers"; // Redirect if Transfer is not found
         }
     }
+
 
     @PostMapping("/edit-transfer/{id}")
     public String updateTransfer(@PathVariable("id") Integer id, @ModelAttribute Transfer transfer) {

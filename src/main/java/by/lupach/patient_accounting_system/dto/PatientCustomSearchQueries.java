@@ -15,4 +15,5 @@ public class PatientCustomSearchQueries {
         private String wardNumber;
         private String phone;
         private Date admissionDate;
+        private Date transferDate;
 }

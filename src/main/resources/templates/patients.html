@@ -56,6 +56,27 @@
         </tbody>
     </table>
 
+    <!-- Pagination Controls -->
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            <li class="page-item" th:class="${patientsPage.hasPrevious()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{patients(page=${patientsPage.number - 1})}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li th:each="i : ${#numbers.sequence(0, patientsPage.totalPages - 1)}"
+                th:class="${i == patientsPage.number} ? 'active' : ''"
+                class="page-item">
+                <a class="page-link" th:href="@{patients(page=${i})}" th:text="${i + 1}"></a>
+            </li>
+            <li class="page-item" th:class="${patientsPage.hasNext()} ? '' : 'disabled'">
+                <a class="page-link" th:href="@{patients(page=${patientsPage.number + 1})}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+
     <!-- Modal for adding a new patient -->
     <div class="modal fade" id="addPatientModal" tabindex="-1" aria-labelledby="addPatientModalLabel" aria-hidden="true">
         <div class="modal-dialog">

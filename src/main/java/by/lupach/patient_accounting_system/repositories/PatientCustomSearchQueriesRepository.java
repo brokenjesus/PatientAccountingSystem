@@ -15,7 +15,7 @@ public interface PatientCustomSearchQueriesRepository extends JpaRepository<Pati
     @Query(value = "CALL GetPatientWardAndPhoneByName(:patientName)", nativeQuery = true)
     List<Object[]> getPatientWardAndPhoneByName(@Param("patientName") String patientName);
 
-    @Query(value = "CALL GetPatientsByDate(:specifiedDate)", nativeQuery = true)
+    @Query(value = "CALL GetPatientsAndWardsByDate(:specifiedDate)", nativeQuery = true)
     List<Object[]> getPatientsByDate(@Param("specifiedDate") Date specifiedDate);
 
     @Query(value = "CALL GetFemalePatientsByAge(:specifiedAge)", nativeQuery = true)

@@ -43,5 +43,14 @@ public class AdmissionDischargeHistory {
     @NonNull
     @Column(nullable = false)
     private String diagnosis;
+
+    private AdmissionMethod admissionMethod = null;
 }
+enum AdmissionMethod {
+    AMBULANCE, REFERRAL
+}
+
+
+
+
 

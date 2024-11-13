@@ -15,6 +15,7 @@
             <th>Date</th>
             <th>Reason</th>
             <th>Diagnosis</th>
+            <th>Admission Method</th>
             <th>Actions</th>
         </tr>
         </thead>
@@ -23,6 +24,7 @@
             <td th:text="${history.date}"></td>
             <td th:text="${history.reason}"></td>
             <td th:text="${history.diagnosis}"></td>
+            <td th:text="${history.admissionMethod}"></td>
             <td>
                 <a th:href="@{/patients/patient-history/{patientId}/edit/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-primary btn-sm">Edit</a>
                 <a th:href="@{/patients/patient-history/{patientId}/delete/{historyId}(patientId=${patient.id}, historyId=${history.id})}" class="btn btn-danger btn-sm"
@@ -76,6 +78,13 @@
                                     <label for="diagnosis" class="form-label">Diagnosis</label>
                                     <input type="text" class="form-control" id="diagnosis" name="diagnosis" required>
                                 </div>
+                                <div class="mb-3" id="admissionMethodDiv">
+                                    <label for="admissionMethod" class="form-label">Reason</label>
+                                    <select class="form-control" id="admissionMethod" name="admissionMethod">
+                                        <option value="AMBULANCE">AMBULANCE</option>
+                                        <option value="REFERRAL">REFERRAL</option>
+                                    </select>
+                                </div>
                             </div>
 
                             <!-- Transfer Fields -->
@@ -103,17 +112,25 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    document.addEventListener("DOMContentLoaded", (event) => {
+    document.addEventListener("DOMContentLoaded", () => {
         const reasonSelect = document.getElementById("reason");
+        const admissionMethodDiv = document.getElementById("admissionMethodDiv");
         const transferTabItem = document.getElementById("transfer-tab-item");
 
-        // Show or hide the transfer tab based on the selected reason
-        if (reasonSelect.value === "DISCHARGE") {
-            transferTabItem.style.display = "none";  // Hide the transfer tab
-        } else {
-            transferTabItem.style.display = "block"; // Show the transfer tab
+        function toggleAdmissionMethod() {
+            if (reasonSelect.value === "DISCHARGE") {
+                transferTabItem.style.display = "none";
+                admissionMethodDiv.style.display = "none";  // Hide admission method
+                document.getElementById("admissionMethod").value = "";  // Clear its value
+            } else {
+                admissionMethodDiv.style.display = "block"; // Show admission method
+            }
         }
+
+        reasonSelect.addEventListener("change", toggleAdmissionMethod);
+        toggleAdmissionMethod(); // Initial call to set the correct state on page load
     });
 </script>
+
 </body>
 </html>

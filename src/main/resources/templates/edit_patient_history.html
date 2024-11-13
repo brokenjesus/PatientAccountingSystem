@@ -29,6 +29,15 @@
             <input type="text" class="form-control" id="editDiagnosis" name="diagnosis" th:value="${history.diagnosis}" required>
         </div>
 
+        <div class="mb-3" id="admissionMethodDiv">
+            <label for="admissionMethod" class="form-label">Reason</label>
+            <select th:field="*{history.admissionMethod}" class="form-control" id="admissionMethod" name="admissionMethod">
+                <option value="AMBULANCE">AMBULANCE</option>
+                <option value="REFERRAL">REFERRAL</option>
+            </select>
+        </div>
+
+
         <div class="mb-3">
             <a th:href="@{/patients/patient-history/{patientId}(patientId=${patient.id})}" class="btn btn-secondary">Cancel</a>
             <button type="submit" class="btn btn-primary">Save Changes</button>

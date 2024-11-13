@@ -18,6 +18,7 @@
             <th scope="col" th:if="${#lists.size(customQueryResult) > 0 && customQueryResult[0].phone != null}">Phone</th>
             <th scope="col" th:if="${#lists.size(customQueryResult) > 0 && customQueryResult[0].age != null}">Age</th>
             <th scope="col" th:if="${#lists.size(customQueryResult) > 0 && customQueryResult[0].admissionDate != null}">Admission Date</th>
+            <th scope="col" th:if="${#lists.size(customQueryResult) > 0 && customQueryResult[0].transferDate != null}">Transfer Date</th>
         </tr>
         </thead>
         <tbody>
@@ -28,6 +29,7 @@
             <td th:if="${patient.phone != null}" th:text="${patient.phone}"></td>
             <td th:if="${patient.age != null}" th:text="${patient.age}"></td>
             <td th:if="${patient.admissionDate != null}" th:text="${patient.admissionDate}"></td>
+            <td th:if="${patient.transferDate != null}" th:text="${patient.transferDate}"></td>
         </tr>
         </tbody>
     </table>
