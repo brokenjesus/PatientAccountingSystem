@@ -61,7 +61,7 @@ public class UserController {
     @GetMapping("admin/manage-users")
     public String manageUsers(@RequestParam(defaultValue = "0") int page, Model model) {
         Page<User> usersPage = userService.getAll(page, PAGE_SIZE).get();
-        model.addAttribute("users", usersPage.getContent());
+        model.addAttribute("usersPage", usersPage);
         return "manage_users";
     }
 

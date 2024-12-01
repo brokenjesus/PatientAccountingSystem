@@ -12,8 +12,10 @@ import java.util.Optional;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
     List<Patient> findAll();
+    @Query(value = "CALL GetAdmittedPatients()", nativeQuery = true)
+    List<Patient> getAdmittedPatients();
     Page<Patient> findAll(Pageable pageable);
-    Page<Patient> findByNameContainingIgnoreCase(String name, Pageable pageable);
-//    @Query(value = "CALL get_patients_without_transfers()", nativeQuery = true)
 //    List<Patient> findAvailableToTransferPatients();
+//    @Query(value = "CALL get_patients_without_transfers()", nativeQuery = true)
+Page<Patient> findByNameContainingIgnoreCase(String name, Pageable pageable);
 }
